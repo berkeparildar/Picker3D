@@ -18,6 +18,4 @@ public class PlayerDemo : MonoBehaviour
     {
         rb.velocity = transform.forward * speed;
     }
-
-    
 }
