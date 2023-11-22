@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &736930798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736930799}
+  - component: {fileID: 736930800}
+  m_Layer: 0
+  m_Name: End
+  m_TagString: EndWall
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &736930799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736930798}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 50}
+  m_LocalScale: {x: 22, y: 5, z: 1}
+  m_Children: []
+  m_Father: {fileID: 611744744294233193}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &736930800
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736930798}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &611744744294233174
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 611744744294233193}
   m_Layer: 0
-  m_Name: PlatformTile
+  m_Name: PlatformRoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,6 +74,7 @@ Transform:
   - {fileID: 611744745758678522}
   - {fileID: 3637809894463918284}
   - {fileID: 9079167224750050275}
+  - {fileID: 736930799}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -61,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 611744745758678523}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 24, y: 0.2, z: 20}
+  m_LocalScale: {x: 24, y: 0.2, z: 120}
   m_Children: []
   m_Father: {fileID: 611744744294233193}
   m_RootOrder: 0
@@ -156,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 4058559927384914078}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.75, y: 0.6, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 20}
+  m_LocalScale: {x: 0.5, y: 1, z: 120}
   m_Children: []
   m_Father: {fileID: 611744744294233193}
   m_RootOrder: 1
@@ -251,7 +296,7 @@ Transform:
   m_GameObject: {fileID: 6110581362305318145}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.75, y: 0.6, z: 0}
-  m_LocalScale: {x: 0.5, y: 1, z: 20}
+  m_LocalScale: {x: 0.5, y: 1, z: 120}
   m_Children: []
   m_Father: {fileID: 611744744294233193}
   m_RootOrder: 2
