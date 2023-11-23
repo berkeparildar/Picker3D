@@ -9,11 +9,12 @@ TagManager:
   - SmallObstacle
   - RampStart
   - RampEnd
+  - LandingTiles
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Post Processing
   - Water
   - UI
   - 
