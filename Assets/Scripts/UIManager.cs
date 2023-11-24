@@ -1,10 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collectibles : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
+    [SerializeField] private GameObject startScreen;
+    [SerializeField] private GameObject gameUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,11 +18,9 @@ public class Collectibles : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision other)
+    public void LevelStart()
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            transform.SetParent(null);
-        }
+        startScreen.SetActive(false);
+        gameUI.SetActive(true);
     }
 }
