@@ -10,6 +10,10 @@ TagManager:
   - RampStart
   - RampEnd
   - LandingTiles
+  - Variation
+  - ObjectGroup
+  - PooledObstacle
+  - FlapActivator
   layers:
   - Default
   - TransparentFX

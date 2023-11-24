@@ -27,8 +27,9 @@ public class ObstacleBasket : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (timer >= 0 && other.CompareTag("SmallObstacle"))
+        if (timer >= 0 && (other.CompareTag("SmallObstacle")||other.CompareTag("PooledObstacle")))
         {
+            Debug.Log("Running from:  " +  gameObject.name);
             if (!firstContact)
             {
                 firstContact = true;
@@ -65,7 +66,7 @@ public class ObstacleBasket : MonoBehaviour
 
     private void RemoveObstacles()
     {
-        if (sphereTag == "SmallObstacle")
+        if (temp.CompareTag("SmallObstacle"))
         {
             GameObject sphereGroupContainer = temp.transform.parent.parent.gameObject;
             Destroy(sphereGroupContainer);
@@ -74,8 +75,8 @@ public class ObstacleBasket : MonoBehaviour
 
     private void RaiseGatesAndPlatform()
     {
-        leftGate.transform.DORotate(new Vector3(0, 0, -75), 3);
-        rightGate.transform.DORotate(new Vector3(0, 0, 75), 3);
+        leftGate.transform.DORotate(new Vector3(0, 0, -60), 2);
+        rightGate.transform.DORotate(new Vector3(0, 0, 60), 2);
         platform.transform.DOMoveY(0, 1).OnComplete(() =>
         {
             player.ContinueMoving();

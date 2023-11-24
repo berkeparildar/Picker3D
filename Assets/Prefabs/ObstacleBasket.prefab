@@ -570,7 +570,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3673078807448445296}
   - component: {fileID: 498546182}
-  - component: {fileID: 498546181}
   m_Layer: 0
   m_Name: ObstacleBasket
   m_TagString: Untagged
@@ -613,30 +612,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 24, y: 10, z: 20}
   m_Center: {x: 0, y: -2, z: 0}
---- !u!114 &498546181
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3673078807448445263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4943c72635a65a4b869e67e737ed67e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetCount: 10
-  currentCount: 0
-  sphereTag: 
-  timer: 1
-  firstContact: 0
-  finished: 0
-  countText: {fileID: 3715653229477863299}
-  player: {fileID: 0}
-  leftGate: {fileID: 7873442369345444249}
-  rightGate: {fileID: 1572558760395374909}
-  platform: {fileID: 4589505169279081392}
-  temp: {fileID: 0}
 --- !u!1 &5294253334671168033
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,11 +1177,6 @@ PrefabInstance:
     - {fileID: 5116862580054777671, guid: 6aaa0a73dc4fba745a4ca9053f5839cb, type: 3}
     - {fileID: 611744745758678525, guid: 6aaa0a73dc4fba745a4ca9053f5839cb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6aaa0a73dc4fba745a4ca9053f5839cb, type: 3}
---- !u!1 &4589505169279081392 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 611744744294233174, guid: 6aaa0a73dc4fba745a4ca9053f5839cb, type: 3}
-  m_PrefabInstance: {fileID: 4020703157287677926}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4589505169279081359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 611744744294233193, guid: 6aaa0a73dc4fba745a4ca9053f5839cb, type: 3}

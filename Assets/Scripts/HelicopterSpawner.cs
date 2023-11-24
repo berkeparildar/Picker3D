@@ -52,7 +52,6 @@ public class HelicopterSpawner : MonoBehaviour
             }
             yield return new WaitForSeconds(0.05f);
         }
-
         yield return new WaitForSeconds(10);
         Deactivate();
     }
@@ -79,7 +78,7 @@ public class HelicopterSpawner : MonoBehaviour
         seqMovement.Append(transform.DOMoveZ(20, 0.4f).SetEase(Ease.Linear).SetRelative());
         seqMovement.Append(transform.DOMoveX(6, 0.4f).SetEase(Ease.Linear));
         seqMovement.Append(transform.DOMoveZ(10, 0.2f).SetEase(Ease.Linear).SetRelative());
-        seqMovement.Append(transform.DOMoveY(100, 0.4f));
+        seqMovement.Append(transform.DOMoveY(100, 0.5f));
     }
 
     private void Deactivate()

@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ObstacleBasket[] obstacleBaskets;
     [SerializeField] private Vector3[] spawnPositions;
     [SerializeField] private GameObject[] obstacleContainers;
+    [SerializeField] private GameObject flapActivators;
+    [SerializeField] private Vector3[] activatorSpawnPoints;
     public bool levelStarted;
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviour
     {
         ChangeLevelColors();
         ActivatePlatformObstacles();
+        LoadFlapActivators();
         ResetBaskets();
     }
 
@@ -53,7 +56,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(() =>
         {
-            player.PlatformTransition();
+            player.GetComponent<RampMovement>().enabled = false;
+            player.GetComponent<Player>().enabled = true;
         });
     }
 
@@ -89,6 +93,17 @@ public class GameManager : MonoBehaviour
         foreach (var basket in obstacleBaskets)
         {
             basket.ResetBasket();
+        }
+    }
+
+    private void LoadFlapActivators()
+    {
+        for (int i = 0; i < flapActivators.transform.childCount; i++)
+        {
+            GameObject currentActivator = flapActivators.transform.GetChild(i).gameObject;
+            currentActivator.transform.position =
+                activatorSpawnPoints[Random.Range(0, activatorSpawnPoints.Length)];
+            currentActivator.SetActive(true);
         }
     }
 
