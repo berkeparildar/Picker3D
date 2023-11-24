@@ -19,16 +19,6 @@
     "SectionAltColorBlue": 0.125,
     "RemoveSectionDuringBuild": false
   },
-  "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-1420643482-0": {
-    "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-1420643482-0",
-    "SectionColorRed": 0.56,
-    "SectionColorGreen": 0.76,
-    "SectionColorBlue": 0.34,
-    "SectionAltColorRed": 0.56,
-    "SectionAltColorGreen": 0.76,
-    "SectionAltColorBlue": 0.34,
-    "RemoveSectionDuringBuild": false
-  },
   "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-270832474-0": {
     "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-270832474-0",
     "SectionColorRed": 1.0,
@@ -49,16 +39,6 @@
     "SectionAltColorBlue": 0.35,
     "RemoveSectionDuringBuild": false
   },
-  "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-489088468-0": {
-    "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-489088468-0",
-    "SectionColorRed": 0.35,
-    "SectionColorGreen": 0.35,
-    "SectionColorBlue": 0.77,
-    "SectionAltColorRed": 0.35,
-    "SectionAltColorGreen": 0.35,
-    "SectionAltColorBlue": 0.77,
-    "RemoveSectionDuringBuild": false
-  },
   "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-230823787-0": {
     "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-230823787-0",
     "SectionColorRed": 0.5,
@@ -69,13 +49,13 @@
     "SectionAltColorBlue": 0.125,
     "RemoveSectionDuringBuild": false
   },
-  "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-1160539003-0": {
-    "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-1160539003-0",
+  "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-874249140-0": {
+    "GameObjectId": "GlobalObjectId_V1-2-9fc0d4010bbf28b4594072e72b8655ab-874249140-0",
     "SectionColorRed": 0.35,
-    "SectionColorGreen": 0.5,
+    "SectionColorGreen": 0.35,
     "SectionColorBlue": 0.77,
     "SectionAltColorRed": 0.35,
-    "SectionAltColorGreen": 0.5,
+    "SectionAltColorGreen": 0.35,
     "SectionAltColorBlue": 0.77,
     "RemoveSectionDuringBuild": false
   }

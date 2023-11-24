@@ -15,7 +15,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/HelicopterSpawner.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ObjectPool.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Player.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PropBasket.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/RampMovement.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UIManager.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -95,7 +95,7 @@
       <workItem from="1700511231107" duration="5914000" />
       <workItem from="1700551743097" duration="18294000" />
       <workItem from="1700648903660" duration="12473000" />
-      <workItem from="1700735158086" duration="29769000" />
+      <workItem from="1700735158086" duration="40308000" />
     </task>
     <servers />
   </component>

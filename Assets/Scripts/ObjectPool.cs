@@ -44,4 +44,22 @@ public class ObjectPool : MonoBehaviour
         }
         return null;
     }
+
+    public void DeactivatePooledObjects(int index)
+    {
+        List<GameObject> selectedList = null;
+        switch (index)
+        {
+            case 0:
+                selectedList = pooledSpheres;
+                break;
+        }
+        for(int i = 0; i < amount; i++)
+        {
+            if(selectedList[i].activeInHierarchy)
+            {
+                selectedList[i].SetActive(false);
+            }
+        }
+    }
 }

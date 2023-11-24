@@ -5,14 +5,18 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int gemCount;
+    [SerializeField] private int level;
     [SerializeField] private GameObject gemTiles;
     [SerializeField] private Player player;
     [SerializeField] private Material groundMaterial;
     [SerializeField] private Material rampMaterial;
     [SerializeField] private int colorIndex;
     [SerializeField] private Color[] levelColors;
-    [SerializeField] private GameObject[] platformContainers;
-    [SerializeField] private PropBasket[] propBaskets;
+    [SerializeField] private GameObject[] normalPlatformObstaclesPrefabs;
+    [SerializeField] private GameObject[] specialPlatformObstaclePrefabs;
+    [SerializeField] private ObstacleBasket[] obstacleBaskets;
+    [SerializeField] private Vector3[] spawnPositions;
+    [SerializeField] private GameObject[] obstacleContainers;
     public bool levelStarted;
     // Start is called before the first frame update
     void Start()
@@ -47,7 +51,10 @@ public class GameManager : MonoBehaviour
             gemTiles.transform.GetChild(i).DOScale(0, 1);
         }
         yield return new WaitForSeconds(1.5f);
-        player.transform.DOMove(new Vector3(0, 0.6f, 0), 2);
+        player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(() =>
+        {
+            player.PlatformTransition();
+        });
     }
 
     public void IncreaseGemCount(int amount)
@@ -58,19 +65,43 @@ public class GameManager : MonoBehaviour
 
     private void ActivatePlatformObstacles()
     {
-        foreach (var container in platformContainers)
+        // This for loop creates new obstacles for the first two platforms
+        // Randomly selects an obstacle group from normal obstacles array
+        // The prefab's name is how many obstacles in that group
+        // Then sets that platform's corresponding basket's upper bound according to difficulty
+        for (int i = 0; i < 2; i++)
         {
-            int containerChildCount = container.transform.childCount;
-            int randomIndex = Random.Range(0, containerChildCount);
-            container.transform.GetChild(randomIndex).gameObject.SetActive(true);
+            int prefabLength = normalPlatformObstaclesPrefabs.Length;
+            GameObject randomPrefab = normalPlatformObstaclesPrefabs[Random.Range(0, prefabLength)];
+            int prefabObstacleCount = int.Parse(randomPrefab.name);
+            obstacleBaskets[i].SetUpperBound(SetDifficulty(prefabObstacleCount));
+            Instantiate(randomPrefab, spawnPositions[i], Quaternion.identity, obstacleContainers[i].transform);
         }
+        // This section is for third platform only, which has special obstacles
+        // No upper bound is set for this section, it is flat.
+        int specialPrefabLength = specialPlatformObstaclePrefabs.Length;
+        GameObject randomSpecialPrefab = specialPlatformObstaclePrefabs[Random.Range(0, specialPrefabLength)];
+        Instantiate(randomSpecialPrefab, spawnPositions[2], Quaternion.identity, obstacleContainers[2].transform);
     }
 
     private void ResetBaskets()
     {
-        foreach (var basket in propBaskets)
+        foreach (var basket in obstacleBaskets)
         {
             basket.ResetBasket();
         }
+    }
+
+    public int SetDifficulty(int obstacleCount)
+    {
+        // This is a very random difficulty modifier I came up with
+        // After a certain Level
+        int difficultyLevel = 5;
+        if (level <= difficultyLevel)
+        {
+            return obstacleCount;
+        }
+        int newCount = obstacleCount - (level - difficultyLevel);
+        return newCount;
     }
 }

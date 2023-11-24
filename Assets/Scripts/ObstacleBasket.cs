@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-public class PropBasket : MonoBehaviour
+public class ObstacleBasket : MonoBehaviour
 {
     [SerializeField] private int targetCount;
     [SerializeField] private int currentCount;
@@ -18,7 +17,7 @@ public class PropBasket : MonoBehaviour
     [SerializeField] private GameObject leftGate;
     [SerializeField] private GameObject rightGate;
     [SerializeField] private GameObject platform;
-    [SerializeField] private List<GameObject> contacts;
+    [SerializeField] private GameObject temp;
 
     void Update()
     {
@@ -28,15 +27,13 @@ public class PropBasket : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (timer >= 0)
+        if (timer >= 0 && other.CompareTag("SmallObstacle"))
         {
             if (!firstContact)
             {
-                sphereTag = other.tag;
                 firstContact = true;
             }
-
-            contacts.Add(other.gameObject);
+            temp = other.gameObject;
             currentCount++;
             timer = 1.0f;
         }
@@ -70,25 +67,8 @@ public class PropBasket : MonoBehaviour
     {
         if (sphereTag == "SmallObstacle")
         {
-            GameObject temp = contacts[0];
             GameObject sphereGroupContainer = temp.transform.parent.parent.gameObject;
-            for (int i = 0; i < contacts.Capacity; i++)
-            {
-                // Initialize particle
-            }
-
             Destroy(sphereGroupContainer);
-        }
-        else
-        {
-            for (int i = 0; i < contacts.Capacity; i++)
-            {
-                if (contacts[i].gameObject.activeSelf)
-                {
-                    // InitializE Particle
-                    contacts[i].gameObject.SetActive(false);
-                }
-            }
         }
     }
 
@@ -108,8 +88,13 @@ public class PropBasket : MonoBehaviour
         firstContact = false;
         currentCount = 0;
         timer = 1.0f;
-        platform.transform.DOMoveY(-5, 1);
+        platform.transform.DOMoveY(-10, 1);
         leftGate.transform.DORotate(Vector3.zero, 1);
         rightGate.transform.DORotate(Vector3.zero, 1);
+    }
+
+    public void SetUpperBound(int target)
+    {
+        targetCount = target;
     }
 }
