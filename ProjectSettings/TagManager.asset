@@ -5,15 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - EndWall
-  - Prop
   - SmallObstacle
   - RampStart
   - RampEnd
   - LandingTiles
-  - Variation
   - ObjectGroup
   - PooledObstacle
   - FlapActivator
+  - Drop
+  - Charge
   layers:
   - Default
   - TransparentFX

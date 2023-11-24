@@ -71,6 +71,10 @@ public class ObstacleBasket : MonoBehaviour
             GameObject sphereGroupContainer = temp.transform.parent.parent.gameObject;
             Destroy(sphereGroupContainer);
         }
+        else
+        {
+            ObjectPool.SharedInstance.DeactivatePooledObjects();
+        }
     }
 
     private void RaiseGatesAndPlatform()

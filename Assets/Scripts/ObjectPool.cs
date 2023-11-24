@@ -5,7 +5,13 @@ public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool SharedInstance;
     public List<GameObject> pooledSpheres;
-    public GameObject spherePrefabs;
+    public List<GameObject> pooledCubes;
+    public List<GameObject> pooledCapsules;
+    public List<GameObject> pooledPyramids;
+    public GameObject spherePrefab;
+    public GameObject cubePrefab;
+    public GameObject capsulePrefab;
+    public GameObject pyramidPrefab;
     public int amount;
     public GameObject objectPool;
 
@@ -17,15 +23,25 @@ public class ObjectPool : MonoBehaviour
     private void Start()
     {
         pooledSpheres = new List<GameObject>();
-        GameObject tmp;
-        for(int i = 0; i < amount; i++)
+        pooledCapsules = new List<GameObject>();
+        pooledCubes = new List<GameObject>();
+        pooledPyramids = new List<GameObject>();
+        for (int i = 0; i < amount; i++)
         {
-            tmp = Instantiate(spherePrefabs, objectPool.transform);
-            tmp.SetActive(false);
-            pooledSpheres.Add(tmp);
+            FillPool(spherePrefab, pooledSpheres);
+            FillPool(cubePrefab, pooledCubes);
+            FillPool(capsulePrefab, pooledCapsules);
+            FillPool(pyramidPrefab, pooledPyramids);
         }
     }
-    
+
+    public void FillPool(GameObject prefab, List<GameObject> pool)
+    {
+        GameObject tmp = Instantiate(prefab, objectPool.transform);
+        tmp.SetActive(false);
+        pool.Add(tmp);
+    }
+
     public GameObject GetPooledObject(int index)
     {
         List<GameObject> selectedList = null;
@@ -34,10 +50,20 @@ public class ObjectPool : MonoBehaviour
             case 0:
                 selectedList = pooledSpheres;
                 break;
+            case 1:
+                selectedList = pooledCubes;
+                break;
+            case 2:
+                selectedList = pooledCapsules;
+                break;
+            case 3:
+                selectedList = pooledPyramids;
+                break;
         }
-        for(int i = 0; i < amount; i++)
+
+        for (int i = 0; i < amount; i++)
         {
-            if(!selectedList[i].activeInHierarchy)
+            if (!selectedList[i].activeInHierarchy)
             {
                 return selectedList[i];
             }
@@ -45,20 +71,25 @@ public class ObjectPool : MonoBehaviour
         return null;
     }
 
-    public void DeactivatePooledObjects(int index)
+    public void DeactivatePooledObjects()
     {
-        List<GameObject> selectedList = null;
-        switch (index)
+        for (int i = 0; i < amount; i++)
         {
-            case 0:
-                selectedList = pooledSpheres;
-                break;
-        }
-        for(int i = 0; i < amount; i++)
-        {
-            if(selectedList[i].activeInHierarchy)
+            if (pooledSpheres[i].activeInHierarchy)
             {
-                selectedList[i].SetActive(false);
+                pooledSpheres[i].SetActive(false);
+            }
+            if (pooledCubes[i].activeInHierarchy)
+            {
+                pooledSpheres[i].SetActive(false);
+            }
+            if (pooledCapsules[i].activeInHierarchy)
+            {
+                pooledSpheres[i].SetActive(false);
+            }
+            if (pooledPyramids[i].activeInHierarchy)
+            {
+                pooledSpheres[i].SetActive(false);
             }
         }
     }

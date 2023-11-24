@@ -8,13 +8,13 @@ public class HelicopterSpawner : MonoBehaviour
     [SerializeField] private GameObject fan;
     [SerializeField] private bool spawnInitialize;
     [SerializeField] private GameObject player;
-    [SerializeField] private List<GameObject> spawnedObjects;
     [SerializeField] private int listIndex;
     
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         fan.transform.DORotate(new Vector3(0, 180, 0), 1).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
+        listIndex = Random.Range(0, 4);
     }
 
     void Update()
@@ -44,11 +44,10 @@ public class HelicopterSpawner : MonoBehaviour
         }
         while (transform.position.z < 380)
         {
-            GameObject sphere = ObjectPool.SharedInstance.GetPooledObject(listIndex); 
-            if (sphere != null) {
-                sphere.transform.position = transform.position;
-                sphere.SetActive(true);
-                spawnedObjects.Add(sphere);
+            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObject(listIndex); 
+            if (obstacle != null) {
+                obstacle.transform.position = transform.position;
+                obstacle.SetActive(true);
             }
             yield return new WaitForSeconds(0.05f);
         }
@@ -85,7 +84,6 @@ public class HelicopterSpawner : MonoBehaviour
     {
         DOTween.Kill(fan.transform);
         DOTween.Kill(transform);
-        ObjectPool.SharedInstance.DeactivatePooledObjects(listIndex);
         Destroy(gameObject, 2);
     }
 }
