@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private int gemCount;
     [SerializeField] private int level;
-    [SerializeField] private GameObject gemTiles;
+    [SerializeField] private GameObject landingZoneTiles;
     [SerializeField] private Player player;
     [SerializeField] private Material groundMaterial;
     [SerializeField] private Material rampMaterial;
@@ -19,17 +19,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject[] obstacleContainers;
     [SerializeField] private GameObject flapActivators;
     [SerializeField] private Vector3[] activatorSpawnPoints;
+    [SerializeField] private int levelObstacleIndex;
     public bool levelStarted;
     // Start is called before the first frame update
     void Start()
     {
         gemCount = PlayerPrefs.GetInt("GemCount", 0);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void LoadNextLevel()
@@ -49,15 +44,19 @@ public class GameManager : MonoBehaviour
     public IEnumerator ResetLevel()
     {
         yield return new WaitForSeconds(1);
-        for (int i = 0; i < gemTiles.transform.childCount; i++)
+        for (int i = 0; i < landingZoneTiles.transform.childCount; i++)
         {
-            gemTiles.transform.GetChild(i).DOScale(0, 1);
+            landingZoneTiles.transform.GetChild(i).DOScale(0, 1);
         }
         yield return new WaitForSeconds(1.5f);
         player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(() =>
         {
             player.GetComponent<RampMovement>().enabled = false;
             player.GetComponent<Player>().enabled = true;
+            for (int i = 0; i < landingZoneTiles.transform.childCount; i++)
+            {
+                landingZoneTiles.transform.GetChild(i).DOScale(new Vector3(23, 0.1f, 9.9f), 1);
+            }
         });
     }
 
@@ -73,13 +72,29 @@ public class GameManager : MonoBehaviour
         // Randomly selects an obstacle group from normal obstacles array
         // The prefab's name is how many obstacles in that group
         // Then sets that platform's corresponding basket's upper bound according to difficulty
-        for (int i = 0; i < 2; i++)
+        if (levelObstacleIndex <= normalPlatformObstaclesPrefabs.Length - 2)
         {
-            int prefabLength = normalPlatformObstaclesPrefabs.Length;
-            GameObject randomPrefab = normalPlatformObstaclesPrefabs[Random.Range(0, prefabLength)];
-            int prefabObstacleCount = int.Parse(randomPrefab.name);
-            obstacleBaskets[i].SetUpperBound(SetDifficulty(prefabObstacleCount));
-            Instantiate(randomPrefab, spawnPositions[i], Quaternion.identity, obstacleContainers[i].transform);
+            GameObject firstObstacle = normalPlatformObstaclesPrefabs[levelObstacleIndex];
+            int prefabFirstCount = int.Parse(firstObstacle.tag);
+            levelObstacleIndex++;
+            obstacleBaskets[0].SetUpperBound(SetDifficulty(prefabFirstCount));
+            Instantiate(firstObstacle, spawnPositions[0], Quaternion.identity, obstacleContainers[0].transform);
+            GameObject secondObstacle = normalPlatformObstaclesPrefabs[levelObstacleIndex];
+            int prefabSecondCount = int.Parse(secondObstacle.tag);
+            obstacleBaskets[1].SetUpperBound(SetDifficulty(prefabSecondCount));
+            levelObstacleIndex++;
+            Instantiate(secondObstacle, spawnPositions[1], Quaternion.identity, obstacleContainers[1].transform);
+        }
+        else
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                int prefabLength = normalPlatformObstaclesPrefabs.Length;
+                GameObject randomPrefab = normalPlatformObstaclesPrefabs[Random.Range(0, prefabLength)];
+                int prefabObstacleCount = int.Parse(randomPrefab.tag);
+                obstacleBaskets[i].SetUpperBound(SetDifficulty(prefabObstacleCount));
+                Instantiate(randomPrefab, spawnPositions[i], Quaternion.identity, obstacleContainers[i].transform);
+            }
         }
         // This section is for third platform only, which has special obstacles
         // No upper bound is set for this section, it is flat.
@@ -107,16 +122,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int SetDifficulty(int obstacleCount)
+    private int SetDifficulty(int obstacleCount)
     {
         // This is a very random difficulty modifier I came up with
-        // After a certain Level
-        int difficultyLevel = 5;
-        if (level <= difficultyLevel)
+        if (level < 5)
         {
-            return obstacleCount;
+            if (obstacleCount == 20)
+            {
+                return 10;
+            }
+            return 20;
         }
-        int newCount = obstacleCount - (level - difficultyLevel);
-        return newCount;
+        else
+        {
+            int difficultyVariable = level - 5;
+            if (difficultyVariable > 10)
+            {
+                difficultyVariable = 10;
+            }
+            if (obstacleCount == 20)
+            {
+                return (10 + Random.Range(0, difficultyVariable));
+            }
+            return (20 + Random.Range(0, difficultyVariable));
+        }
     }
 }

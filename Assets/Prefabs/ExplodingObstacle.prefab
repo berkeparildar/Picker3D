@@ -104,6 +104,8 @@ MonoBehaviour:
   - {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
   - {fileID: 13562882237320842, guid: 8d9e1449bc9c9bc45929afc1875e8da3, type: 3}
   amount: 0
+  isDrop: 0
+  rb: {fileID: 2067674128928413710}
 --- !u!54 &2067674128928413710
 Rigidbody:
   m_ObjectHideFlags: 0

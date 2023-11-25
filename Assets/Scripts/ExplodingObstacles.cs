@@ -36,7 +36,7 @@ public class ExplodingObstacles : MonoBehaviour
 
     private void CheckPlayerDistance()
     {
-        if (transform.position.z - player.transform.position.z < 50)
+        if (transform.position.z - player.transform.position.z < 35)
         {
             if (isDrop)
             {

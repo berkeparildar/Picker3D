@@ -36,7 +36,7 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.build.unityPlugin",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Color Scheme Font",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -96,7 +96,8 @@
       <workItem from="1700511231107" duration="5914000" />
       <workItem from="1700551743097" duration="18294000" />
       <workItem from="1700648903660" duration="12473000" />
-      <workItem from="1700735158086" duration="51348000" />
+      <workItem from="1700735158086" duration="51666000" />
+      <workItem from="1700878204116" duration="5494000" />
     </task>
     <servers />
   </component>

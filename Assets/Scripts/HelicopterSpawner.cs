@@ -49,7 +49,7 @@ public class HelicopterSpawner : MonoBehaviour
                 obstacle.transform.position = transform.position;
                 obstacle.SetActive(true);
             }
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.04f);
         }
         yield return new WaitForSeconds(10);
         Deactivate();

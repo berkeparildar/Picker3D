@@ -1,8 +1,5 @@
-using System;
-using Cinemachine;
 using DG.Tweening;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -135,11 +132,13 @@ public class Player : MonoBehaviour
         leftFlap.transform.DOScale(new Vector3(0.001f, 0.001f, 0.001f), 0.5f).OnComplete(() =>
         {
             DOTween.Kill(leftFlap.transform);
+            leftFlap.transform.rotation = Quaternion.Euler(Vector3.zero);
             leftFlap.SetActive(false);
         });
         rightFlap.transform.DOScale(new Vector3(0.001f, 0.001f, 0.001f), 0.5f).OnComplete(() =>
         {
             DOTween.Kill(rightFlap.transform);
+            rightFlap.transform.rotation = Quaternion.Euler(Vector3.zero);
             rightFlap.SetActive(false);
         });
     }

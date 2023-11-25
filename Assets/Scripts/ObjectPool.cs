@@ -81,15 +81,15 @@ public class ObjectPool : MonoBehaviour
             }
             if (pooledCubes[i].activeInHierarchy)
             {
-                pooledSpheres[i].SetActive(false);
+                pooledCubes[i].SetActive(false);
             }
             if (pooledCapsules[i].activeInHierarchy)
             {
-                pooledSpheres[i].SetActive(false);
+                pooledCapsules[i].SetActive(false);
             }
             if (pooledPyramids[i].activeInHierarchy)
             {
-                pooledSpheres[i].SetActive(false);
+                pooledPyramids[i].SetActive(false);
             }
         }
     }

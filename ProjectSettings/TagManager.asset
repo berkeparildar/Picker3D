@@ -14,6 +14,8 @@ TagManager:
   - FlapActivator
   - Drop
   - Charge
+  - 20
+  - 28
   layers:
   - Default
   - TransparentFX

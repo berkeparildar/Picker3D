@@ -91,6 +91,7 @@ public class ObstacleBasket : MonoBehaviour
     public void ResetBasket()
     {
         firstContact = false;
+        finished = false;
         currentCount = 0;
         timer = 1.0f;
         platform.transform.DOMoveY(-10, 1);
