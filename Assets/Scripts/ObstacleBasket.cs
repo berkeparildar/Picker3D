@@ -6,10 +6,10 @@ public class ObstacleBasket : MonoBehaviour
 {
     [SerializeField] private int targetCount;
     [SerializeField] private int currentCount;
-    [SerializeField] private string sphereTag;
     [SerializeField] private float timer;
     [SerializeField] private bool firstContact;
     [SerializeField] private bool finished;
+    [SerializeField] private UIManager uiManager;
 
     [SerializeField] private TextMeshPro countText;
     [SerializeField] private Player player;
@@ -27,56 +27,66 @@ public class ObstacleBasket : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (timer >= 0 && (other.CompareTag("SmallObstacle")||other.CompareTag("PooledObstacle")))
+        // count triggers only if time is not finished
+        if (timer >= 0 && (other.CompareTag("SmallObstacle") || other.CompareTag("PooledObstacle")))
         {
-            Debug.Log("Running from:  " +  gameObject.name);
-            if (!firstContact)
+            if (!firstContact)  // start the timer if this is the first contact
             {
                 firstContact = true;
+                // I have this temp game object here to later check whether this basket is for the first and second
+                // platforms or the third
+                // Removing the obstacles after evaluating differs for two, so I check this temp object's tag to differ
+                temp = other.gameObject;
             }
-            temp = other.gameObject;
             currentCount++;
-            timer = 1.0f;
+            timer = 1.0f; // time resets after each contact
         }
     }
-
+    // This method's purpose is to limit the amount of time where player can push an obstacle in
     private void CountTimer()
     {
+        // After the first contact the timer starts
         if (firstContact && timer >= 0)
         {
             timer -= Time.deltaTime;
         }
-
+        //Once time finishes, it evaluates according to counts
         if (timer <= 0 && !finished)
         {
             finished = true;
+            // success
             if (currentCount >= targetCount)
             {
-                //Pass
                 RaiseGatesAndPlatform();
-                RemoveObstacles();
+                uiManager.FillProgressImage();
             }
+            // fail
             else
             {
-                //Fail
+                uiManager.ShowFailUI();
             }
+            RemoveObstacles();
         }
-        
     }
 
+    // Called after time is finished
     private void RemoveObstacles()
     {
+        // For the first and second platform obstacles, destroys their parent since not pooled
         if (temp.CompareTag("SmallObstacle"))
         {
             GameObject sphereGroupContainer = temp.transform.parent.parent.gameObject;
             Destroy(sphereGroupContainer);
         }
+        // for the third platform, deactivates them from the pool
         else
         {
             ObjectPool.SharedInstance.DeactivatePooledObjects();
         }
     }
 
+    // Sets the visuals after hitting the target count
+    // Lets player go
     private void RaiseGatesAndPlatform()
     {
         leftGate.transform.DORotate(new Vector3(0, 0, -60), 2);
@@ -84,10 +94,11 @@ public class ObstacleBasket : MonoBehaviour
         platform.transform.DOMoveY(0, 1).OnComplete(() =>
         {
             player.ContinueMoving();
-            currentCount = 0;
         });
     }
-
+    
+    // Resets the current state of the basket to default
+    // Called when level is being reset, after the player launches of the ramp
     public void ResetBasket()
     {
         firstContact = false;
@@ -98,7 +109,8 @@ public class ObstacleBasket : MonoBehaviour
         leftGate.transform.DORotate(Vector3.zero, 1);
         rightGate.transform.DORotate(Vector3.zero, 1);
     }
-
+    
+    // This is called by Game Manager setting the difficulty
     public void SetUpperBound(int target)
     {
         targetCount = target;

@@ -1,30 +1,49 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int gemCount;
-    [SerializeField] private int level;
-    [SerializeField] private GameObject landingZoneTiles;
+    [SerializeField] public int gemCount;
+    [SerializeField] public int level;
     [SerializeField] private Player player;
+    [SerializeField] private UIManager uiManager;
+
+    [SerializeField] private GameObject landingZoneTiles;
+
     [SerializeField] private Material groundMaterial;
     [SerializeField] private Material rampMaterial;
     [SerializeField] private int colorIndex;
     [SerializeField] private Color[] levelColors;
+
     [SerializeField] private GameObject[] normalPlatformObstaclesPrefabs;
     [SerializeField] private GameObject[] specialPlatformObstaclePrefabs;
+    [SerializeField] private GameObject[] firstPlatformObstacles;
+    [SerializeField] private GameObject[] secondPlatformObstacles;
+    [SerializeField] private GameObject[] thirdPlatformObstacles;
+    [SerializeField] private List<GameObject[]> obstaclePrefabsLists;
     [SerializeField] private ObstacleBasket[] obstacleBaskets;
     [SerializeField] private Vector3[] spawnPositions;
     [SerializeField] private GameObject[] obstacleContainers;
     [SerializeField] private GameObject flapActivators;
     [SerializeField] private Vector3[] activatorSpawnPoints;
     [SerializeField] private int levelObstacleIndex;
-    public bool levelStarted;
-    // Start is called before the first frame update
-    void Start()
+
+    [SerializeField] private int maxGemReward;
+    [SerializeField] private int minGemReward;
+
+    [SerializeField] private int uniqueLevels;
+    [SerializeField] private int platformCount;
+
+    private void Awake()
     {
+        obstaclePrefabsLists = new List<GameObject[]>()
+            { firstPlatformObstacles, secondPlatformObstacles, thirdPlatformObstacles };
         gemCount = PlayerPrefs.GetInt("GemCount", 0);
+        level = PlayerPrefs.GetInt("Level", 1);
+        levelObstacleIndex = PlayerPrefs.GetInt("ObstacleIndex", 0);
+        ActivatePlatformObstacles();
     }
 
     public void LoadNextLevel()
@@ -48,11 +67,14 @@ public class GameManager : MonoBehaviour
         {
             landingZoneTiles.transform.GetChild(i).DOScale(0, 1);
         }
+
         yield return new WaitForSeconds(1.5f);
         player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(() =>
         {
+            int randomGemAward = Random.Range(minGemReward, maxGemReward);
+            uiManager.ShowEndUI(randomGemAward, gemCount);
+            gemCount += randomGemAward;
             player.GetComponent<RampMovement>().enabled = false;
-            player.GetComponent<Player>().enabled = true;
             for (int i = 0; i < landingZoneTiles.transform.childCount; i++)
             {
                 landingZoneTiles.transform.GetChild(i).DOScale(new Vector3(23, 0.1f, 9.9f), 1);
@@ -68,39 +90,10 @@ public class GameManager : MonoBehaviour
 
     private void ActivatePlatformObstacles()
     {
-        // This for loop creates new obstacles for the first two platforms
-        // Randomly selects an obstacle group from normal obstacles array
-        // The prefab's name is how many obstacles in that group
-        // Then sets that platform's corresponding basket's upper bound according to difficulty
-        if (levelObstacleIndex <= normalPlatformObstaclesPrefabs.Length - 2)
+        for (int i = 0; i < platformCount; i++)
         {
-            GameObject firstObstacle = normalPlatformObstaclesPrefabs[levelObstacleIndex];
-            int prefabFirstCount = int.Parse(firstObstacle.tag);
-            levelObstacleIndex++;
-            obstacleBaskets[0].SetUpperBound(SetDifficulty(prefabFirstCount));
-            Instantiate(firstObstacle, spawnPositions[0], Quaternion.identity, obstacleContainers[0].transform);
-            GameObject secondObstacle = normalPlatformObstaclesPrefabs[levelObstacleIndex];
-            int prefabSecondCount = int.Parse(secondObstacle.tag);
-            obstacleBaskets[1].SetUpperBound(SetDifficulty(prefabSecondCount));
-            levelObstacleIndex++;
-            Instantiate(secondObstacle, spawnPositions[1], Quaternion.identity, obstacleContainers[1].transform);
+                GenerateObstacle(i, levelObstacleIndex);
         }
-        else
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                int prefabLength = normalPlatformObstaclesPrefabs.Length;
-                GameObject randomPrefab = normalPlatformObstaclesPrefabs[Random.Range(0, prefabLength)];
-                int prefabObstacleCount = int.Parse(randomPrefab.tag);
-                obstacleBaskets[i].SetUpperBound(SetDifficulty(prefabObstacleCount));
-                Instantiate(randomPrefab, spawnPositions[i], Quaternion.identity, obstacleContainers[i].transform);
-            }
-        }
-        // This section is for third platform only, which has special obstacles
-        // No upper bound is set for this section, it is flat.
-        int specialPrefabLength = specialPlatformObstaclePrefabs.Length;
-        GameObject randomSpecialPrefab = specialPlatformObstaclePrefabs[Random.Range(0, specialPrefabLength)];
-        Instantiate(randomSpecialPrefab, spawnPositions[2], Quaternion.identity, obstacleContainers[2].transform);
     }
 
     private void ResetBaskets()
@@ -131,6 +124,7 @@ public class GameManager : MonoBehaviour
             {
                 return 10;
             }
+
             return 20;
         }
         else
@@ -140,11 +134,56 @@ public class GameManager : MonoBehaviour
             {
                 difficultyVariable = 10;
             }
+
             if (obstacleCount == 20)
             {
                 return (10 + Random.Range(0, difficultyVariable));
             }
+
             return (20 + Random.Range(0, difficultyVariable));
         }
+    }
+
+    public void IncreaseLevel()
+    {
+        level++;
+        PlayerPrefs.SetInt("Level", level);
+        PlayerPrefs.SetInt("ObstacleIndex", levelObstacleIndex);
+        uiManager.ShowNextLevel();
+    }
+
+    public void EnablePlayer()
+    {
+        player.GetComponent<Player>().enabled = true;
+    }
+
+    public void RetryLevel()
+    {
+        ResetBaskets();
+        player.ResetPlayer();
+        for (int i = 0; i < platformCount; i++)
+        {
+            if (obstacleContainers[i].transform.childCount == 0)
+            {
+                GenerateObstacle(i, levelObstacleIndex);
+            }
+        }
+        uiManager.RestartLevel();
+    }
+
+    private void GenerateObstacle(int platformIndex, int obstacleIndex)
+    {
+        GameObject obstacle = null;
+        if (obstacleIndex < uniqueLevels)
+        {
+            obstacle = obstaclePrefabsLists[platformIndex][obstacleIndex];
+        }
+        else
+        {
+            obstacle = obstaclePrefabsLists[platformIndex][Random.Range(0, uniqueLevels)];
+        }
+        int prefabObstacleAmount = int.Parse(obstacle.tag);
+        obstacleBaskets[platformIndex].SetUpperBound(SetDifficulty(prefabObstacleAmount));
+        Instantiate(obstacle, spawnPositions[platformIndex], Quaternion.identity, obstacleContainers[platformIndex].transform);
     }
 }

@@ -14,20 +14,19 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float speed;
     [SerializeField] private float verticalSpeed;
-    
-    [SerializeField] private GameManager gameManager;
+
     [SerializeField] private UIManager uiManager;
 
     [SerializeField] private bool isTouching;
     [SerializeField] private bool firstTouch;
-    [SerializeField] private Vector2 initialTouchPosition; 
+    [SerializeField] private Vector2 initialTouchPosition;
     [SerializeField] private float xDelta;
 
     private void OnEnable()
     {
-        rb.isKinematic = true; 
-        boxCollider.enabled = false; 
-        meshCollider.enabled = true; 
+        rb.isKinematic = true;
+        boxCollider.enabled = false;
+        meshCollider.enabled = true;
         firstTouch = false;
     }
 
@@ -42,7 +41,6 @@ public class Player : MonoBehaviour
         {
             case "EndWall":
                 verticalSpeed = 0;
-                Debug.Log("Called!!!");
                 DeactivateFlaps();
                 break;
             case "FlapActivator":
@@ -59,10 +57,6 @@ public class Player : MonoBehaviour
     private void Update()
     {
         HorizontalMovement();
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            ActivateFlaps();
-        }
     }
 
     private void HorizontalMovement()
@@ -71,19 +65,16 @@ public class Player : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-
             if (touch.phase == TouchPhase.Began)
             {
                 if (!firstTouch)
                 {
                     firstTouch = true;
                     uiManager.LevelStart();
+                    return;
                 }
-                else
-                {
-                    isTouching = true;
-                    initialTouchPosition = touch.position;
-                }
+                isTouching = true;
+                initialTouchPosition = touch.position;
             }
             else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
             {
@@ -92,12 +83,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    // This is the default method used for moving tool.
+    // This is the default method used for moving the player.
     private void Movement()
     {
         if (firstTouch)
         {
-            // Regular movement outside of ramp
             if (isTouching)
             {
                 // xDelta is calculated here although we get input in Update()
@@ -105,31 +95,40 @@ public class Player : MonoBehaviour
                 xDelta = (Input.GetTouch(0).position.x - initialTouchPosition.x) / 10;
                 initialTouchPosition = Input.GetTouch(0).position;
             }
+            
             Vector3 forwardMovement = new Vector3(xDelta, 0, verticalSpeed) * speed;
             Vector3 newPosition = rb.position + forwardMovement * Time.fixedDeltaTime;
             newPosition.x = Mathf.Clamp(newPosition.x, -7.5f, 7.5f);
             rb.MovePosition(newPosition);
         }
     }
-    
+
     public void ContinueMoving()
     {
         verticalSpeed = 1;
     }
 
+    // This method activates the player's flaps
+    // Called once player contacts with a power up.
     private void ActivateFlaps()
     {
         leftFlap.SetActive(true);
         rightFlap.SetActive(true);
+        // Scaling for smooth appearance
         leftFlap.transform.DOScale(new Vector3(0.4f, 0.25f, 0.4f), 0.5f);
         rightFlap.transform.DOScale(new Vector3(0.4f, 0.25f, 0.4f), 0.5f);
+        // Looped rotation
         leftFlap.transform.DORotate(new Vector3(0, 180, 0), 1).SetEase(Ease.Linear).SetLoops(-1);
         rightFlap.transform.DORotate(new Vector3(0, -180, 0), 1).SetEase(Ease.Linear).SetLoops(-1);
     }
 
+    // This method deactivates the currently active flaps. 
+    // This is called after reaching the end of the platform road, before the obstacle basket
     private void DeactivateFlaps()
     {
-        leftFlap.transform.DOScale(new Vector3(0.001f, 0.001f, 0.001f), 0.5f).OnComplete(() =>
+        // Sets their scale to zero for a fading animation.
+        // Resets their rotation and deactivates
+        leftFlap.transform.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
         {
             DOTween.Kill(leftFlap.transform);
             leftFlap.transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -141,5 +140,12 @@ public class Player : MonoBehaviour
             rightFlap.transform.rotation = Quaternion.Euler(Vector3.zero);
             rightFlap.SetActive(false);
         });
+    }
+
+    public void ResetPlayer()
+    {
+        firstTouch = false;
+        verticalSpeed = 1;
+        transform.position = new Vector3(0, 0.6f, 0);
     }
 }

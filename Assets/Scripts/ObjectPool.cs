@@ -8,12 +8,19 @@ public class ObjectPool : MonoBehaviour
     public List<GameObject> pooledCubes;
     public List<GameObject> pooledCapsules;
     public List<GameObject> pooledPyramids;
+    public List<GameObject> gemImages;
     public GameObject spherePrefab;
     public GameObject cubePrefab;
     public GameObject capsulePrefab;
     public GameObject pyramidPrefab;
+    public GameObject spherePoolContainer;
+    public GameObject cubePoolContainer;
+    public GameObject capsulePoolContainer;
+    public GameObject pyramidPoolContainer;
     public int amount;
-    public GameObject objectPool;
+    public GameObject gemImagePrefab;
+    public int gemImageCount;
+    public GameObject gemImageContainer;
 
     private void Awake()
     {
@@ -26,18 +33,24 @@ public class ObjectPool : MonoBehaviour
         pooledCapsules = new List<GameObject>();
         pooledCubes = new List<GameObject>();
         pooledPyramids = new List<GameObject>();
+        gemImages = new List<GameObject>();
         for (int i = 0; i < amount; i++)
         {
-            FillPool(spherePrefab, pooledSpheres);
-            FillPool(cubePrefab, pooledCubes);
-            FillPool(capsulePrefab, pooledCapsules);
-            FillPool(pyramidPrefab, pooledPyramids);
+            FillPool(spherePrefab, pooledSpheres, spherePoolContainer);
+            FillPool(cubePrefab, pooledCubes, cubePoolContainer);
+            FillPool(capsulePrefab, pooledCapsules, capsulePoolContainer);
+            FillPool(pyramidPrefab, pooledPyramids, pyramidPoolContainer);
+        }
+
+        for (int i = 0; i < gemImageCount; i++)
+        {
+            FillPool(gemImagePrefab, gemImages, gemImageContainer);
         }
     }
 
-    public void FillPool(GameObject prefab, List<GameObject> pool)
+    public void FillPool(GameObject prefab, List<GameObject> pool, GameObject container)
     {
-        GameObject tmp = Instantiate(prefab, objectPool.transform);
+        GameObject tmp = Instantiate(prefab, container.transform);
         tmp.SetActive(false);
         pool.Add(tmp);
     }
@@ -45,23 +58,32 @@ public class ObjectPool : MonoBehaviour
     public GameObject GetPooledObject(int index)
     {
         List<GameObject> selectedList = null;
+        int currentAmount = 0;
         switch (index)
         {
             case 0:
                 selectedList = pooledSpheres;
+                currentAmount = amount;
                 break;
             case 1:
                 selectedList = pooledCubes;
+                currentAmount = amount;
                 break;
             case 2:
                 selectedList = pooledCapsules;
+                currentAmount = amount;
                 break;
             case 3:
                 selectedList = pooledPyramids;
+                currentAmount = amount;
+                break;
+            case 4:
+                selectedList = gemImages;
+                currentAmount = gemImageCount;
                 break;
         }
 
-        for (int i = 0; i < amount; i++)
+        for (int i = 0; i < currentAmount; i++)
         {
             if (!selectedList[i].activeInHierarchy)
             {
@@ -71,6 +93,7 @@ public class ObjectPool : MonoBehaviour
         return null;
     }
 
+    // This needs refactoring later
     public void DeactivatePooledObjects()
     {
         for (int i = 0; i < amount; i++)

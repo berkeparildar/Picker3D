@@ -4,6 +4,7 @@ using UnityEngine;
 public class RampMovement : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private UIManager uiManager;
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private MeshCollider meshCollider;
@@ -14,7 +15,7 @@ public class RampMovement : MonoBehaviour
     [SerializeField] private GameObject fallCameraPoint;
     
     // This section of variables are used in ramp, where player is repeatedly tapping.
-    [SerializeField] private float powerDecreaseRate = 30f;
+    [SerializeField] private float powerDecreaseRate = 40f;
     [SerializeField] private float minPowerIncrease = 10f;
     [SerializeField] private float maxPowerIncrease = 15f;
     [SerializeField] private float maxPower = 100;
@@ -22,23 +23,26 @@ public class RampMovement : MonoBehaviour
     
     [SerializeField] private float speed;
     [SerializeField] private bool isOnRamp;
+    [SerializeField] private bool hasLanded;
 
     private void OnEnable()
     {
+        hasLanded = false;
         isOnRamp = true;
-        rampCamera.SetActive(true); // Activate the Ramp's virtual camera
-        meshCollider.enabled = false; // Deactivate MeshCollider
-        rb.isKinematic = false; // Rigidbody is set to dynamic
-        boxCollider.enabled = true; // BoxCollider is enabled
+        rampCamera.SetActive(true);
+        meshCollider.enabled = false; 
+        rb.isKinematic = false;
+        boxCollider.enabled = true;
+        gameManager.IncreaseLevel();
+        uiManager.ToggleRampUI();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        if (isOnRamp)
-        {
-            Movement();
-            TapPowerUp();
-        }
+        if (!isOnRamp) return;
+        Movement();
+        TapPowerUp();
+        uiManager.UpdateTapMeter(currentPower, maxPower);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -73,6 +77,7 @@ public class RampMovement : MonoBehaviour
     
     private void Launch()
     {
+        uiManager.ToggleRampUI();
         currentPower = 0;
         isOnRamp = false;
         gameManager.LoadNextLevel();
@@ -90,9 +95,12 @@ public class RampMovement : MonoBehaviour
 
     private void Land(string gameObjectName)
     {
+        if (hasLanded) return;
+        hasLanded = true;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         int landedAmount = int.Parse(gameObjectName);
+        StartCoroutine(uiManager.ShowGemPopUps(landedAmount));
         gameManager.IncreaseGemCount(landedAmount);
         defaultCamera.GetComponent<CinemachineVirtualCamera>().m_LookAt = defaultCameraPoint.transform;
         StartCoroutine(gameManager.ResetLevel());

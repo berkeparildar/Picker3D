@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -63,7 +62,7 @@ public class HelicopterSpawner : MonoBehaviour
         seqMovement.Append(transform.DOMoveX(-6, 0.5f).SetEase(Ease.InOutSine));
         seqMovement.Append(transform.DOMoveX(0, 0.25f).SetEase(Ease.InOutSine));
         seqMovement.Insert(0, transform.DOMoveZ(380, seqMovement.Duration()).SetEase(Ease.Linear));
-        seqMovement.Append(transform.DOMoveY(100, 0.5f));
+        seqMovement.Append(transform.DOMoveY(100, 2));
     }
 
     private void LinearMovement()
@@ -77,7 +76,7 @@ public class HelicopterSpawner : MonoBehaviour
         seqMovement.Append(transform.DOMoveZ(20, 0.4f).SetEase(Ease.Linear).SetRelative());
         seqMovement.Append(transform.DOMoveX(6, 0.4f).SetEase(Ease.Linear));
         seqMovement.Append(transform.DOMoveZ(10, 0.2f).SetEase(Ease.Linear).SetRelative());
-        seqMovement.Append(transform.DOMoveY(100, 0.5f));
+        seqMovement.Append(transform.DOMoveY(100, 2));
     }
 
     private void Deactivate()

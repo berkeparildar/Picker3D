@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7153693556099050607}
   m_Layer: 0
   m_Name: ExplodingObstaclesOne
-  m_TagString: Untagged
+  m_TagString: 20
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

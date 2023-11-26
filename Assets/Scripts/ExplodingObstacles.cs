@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class ExplodingObstacles : MonoBehaviour
 {
@@ -13,7 +9,7 @@ public class ExplodingObstacles : MonoBehaviour
     [SerializeField] private bool isDrop;
     [SerializeField] private Rigidbody rb;
 
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         if (CompareTag("Drop"))

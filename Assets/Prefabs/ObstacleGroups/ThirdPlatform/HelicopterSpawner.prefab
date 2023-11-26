@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7102943110674313856}
   m_Layer: 0
   m_Name: HelicopterSpawner
-  m_TagString: Untagged
+  m_TagString: 20
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,7 +48,6 @@ MonoBehaviour:
   fan: {fileID: 7102943111120628630}
   spawnInitialize: 0
   player: {fileID: 0}
-  spawnedObjects: []
   listIndex: 0
 --- !u!1 &7102943111046721063
 GameObject:
