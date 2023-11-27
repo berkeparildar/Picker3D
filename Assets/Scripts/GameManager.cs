@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     private void ChangeLevelColors()
     {
         groundMaterial.color = levelColors[obstacleIndex];
-        rampMaterial.color = obstacleIndex > 6 ? levelColors[obstacleIndex] : levelColors[obstacleIndex + 1];
+        rampMaterial.color = obstacleIndex > 6 ? levelColors[obstacleIndex - 2] : levelColors[obstacleIndex - 1];
     }
 
     private void MovePlayerToStartPosition()
