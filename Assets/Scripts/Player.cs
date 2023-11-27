@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
+        GetComponent<RampSection>().enabled = false;
         rb.isKinematic = true;
         boxCollider.enabled = false;
         meshCollider.enabled = true;
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour
                 other.gameObject.SetActive(false);
                 break;
             case "RampStart":
-                GetComponent<RampMovement>().enabled = true;
+                GetComponent<RampSection>().enabled = true;
                 GetComponent<Player>().enabled = false;
                 break;
         }
@@ -70,7 +71,7 @@ public class Player : MonoBehaviour
                 if (!firstTouch)
                 {
                     firstTouch = true;
-                    uiManager.LevelStart();
+                    uiManager.ShowGameUI();
                     return;
                 }
                 isTouching = true;
@@ -92,7 +93,7 @@ public class Player : MonoBehaviour
             {
                 // xDelta is calculated here although we get input in Update()
                 // I saw that calculating xDelta in FixedUpdate results in smoother movement, so it is here
-                xDelta = (Input.GetTouch(0).position.x - initialTouchPosition.x) / 10;
+                xDelta = (Input.GetTouch(0).position.x - initialTouchPosition.x) / 15;
                 initialTouchPosition = Input.GetTouch(0).position;
             }
             

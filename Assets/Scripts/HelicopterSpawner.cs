@@ -8,10 +8,12 @@ public class HelicopterSpawner : MonoBehaviour
     [SerializeField] private bool spawnInitialize;
     [SerializeField] private GameObject player;
     [SerializeField] private int listIndex;
-    
-    void Start()
+    [SerializeField] private ObstacleBasket obstacleBasket;
+
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        obstacleBasket = GameObject.Find("ObstacleBasketThird").GetComponent<ObstacleBasket>();
         fan.transform.DORotate(new Vector3(0, 180, 0), 1).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
         listIndex = Random.Range(0, 4);
     }
@@ -43,10 +45,11 @@ public class HelicopterSpawner : MonoBehaviour
         }
         while (transform.position.z < 380)
         {
-            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObject(listIndex); 
+            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObstacle(listIndex); 
             if (obstacle != null) {
                 obstacle.transform.position = transform.position;
                 obstacle.SetActive(true);
+                obstacleBasket.pooledObjects.Add(obstacle);
             }
             yield return new WaitForSeconds(0.04f);
         }

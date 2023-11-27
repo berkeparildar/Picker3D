@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2132111431567161734}
   m_Layer: 0
   m_Name: ExplodingObstaclesThree
-  m_TagString: 20
+  m_TagString: 28
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,6 +86,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: cd
+      value: 
+      objectReference: {fileID: 2724955424375676603}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: collider
+      value: 
+      objectReference: {fileID: 2724955424375676603}
     - target: {fileID: 1165571955209817992, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
       propertyPath: m_Name
       value: ExplodingObstacle (4)
@@ -103,6 +111,11 @@ PrefabInstance:
 --- !u!4 &989166324959285324 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1165571955209817988, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+  m_PrefabInstance: {fileID: 2132111429896658888}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2724955424375676603 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4054986281571434867, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
   m_PrefabInstance: {fileID: 2132111429896658888}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2132111429928660477
@@ -156,6 +169,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: cd
+      value: 
+      objectReference: {fileID: 2724955424336342158}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: collider
+      value: 
+      objectReference: {fileID: 2724955424336342158}
     - target: {fileID: 1165571955209817992, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
       propertyPath: m_Name
       value: ExplodingObstacle (3)
@@ -173,6 +194,11 @@ PrefabInstance:
 --- !u!4 &989166324909531769 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1165571955209817988, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+  m_PrefabInstance: {fileID: 2132111429928660477}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2724955424336342158 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4054986281571434867, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
   m_PrefabInstance: {fileID: 2132111429928660477}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2132111430976105260
@@ -226,6 +252,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: cd
+      value: 
+      objectReference: {fileID: 2724955423303314015}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: collider
+      value: 
+      objectReference: {fileID: 2724955423303314015}
     - target: {fileID: 1165571955209817992, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
       propertyPath: m_Name
       value: ExplodingObstacle (1)
@@ -243,6 +277,11 @@ PrefabInstance:
 --- !u!4 &989166326026151080 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1165571955209817988, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+  m_PrefabInstance: {fileID: 2132111430976105260}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2724955423303314015 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4054986281571434867, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
   m_PrefabInstance: {fileID: 2132111430976105260}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2132111431601937092
@@ -296,6 +335,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: cd
+      value: 
+      objectReference: {fileID: 2724955422787836855}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: collider
+      value: 
+      objectReference: {fileID: 2724955422787836855}
     - target: {fileID: 1165571955209817992, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
       propertyPath: m_Name
       value: ExplodingObstacle
@@ -313,6 +360,11 @@ PrefabInstance:
 --- !u!4 &989166326459045184 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1165571955209817988, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+  m_PrefabInstance: {fileID: 2132111431601937092}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2724955422787836855 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4054986281571434867, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
   m_PrefabInstance: {fileID: 2132111431601937092}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2132111431684167839
@@ -366,6 +418,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: cd
+      value: 
+      objectReference: {fileID: 2724955422874163692}
+    - target: {fileID: 1165571955209817989, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+      propertyPath: collider
+      value: 
+      objectReference: {fileID: 2724955422874163692}
     - target: {fileID: 1165571955209817992, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
       propertyPath: m_Name
       value: ExplodingObstacle (2)
@@ -383,5 +443,10 @@ PrefabInstance:
 --- !u!4 &989166326409189147 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1165571955209817988, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
+  m_PrefabInstance: {fileID: 2132111431684167839}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &2724955422874163692 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4054986281571434867, guid: 9c74d683a8b1208418977c5f92931fd8, type: 3}
   m_PrefabInstance: {fileID: 2132111431684167839}
   m_PrefabAsset: {fileID: 0}

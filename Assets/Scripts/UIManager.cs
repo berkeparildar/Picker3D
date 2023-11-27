@@ -6,182 +6,174 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private GameManager gameManager;
+    
     [SerializeField] private GameObject startUI;
     [SerializeField] private GameObject endUI;
     [SerializeField] private GameObject gameUI;
     [SerializeField] private GameObject failUI;
-    [SerializeField] private GameObject[] progressImages;
-    [SerializeField] private int progressImageIndex;
-    [SerializeField] private TextMeshProUGUI currentLevelText;
-    [SerializeField] private TextMeshProUGUI nextLevelText;
-    [SerializeField] private TextMeshProUGUI gameUITotalGemText;
-    [SerializeField] private GameManager gameManager;
-    [SerializeField] private TextMeshProUGUI scorePopUp;
-    [SerializeField] private GameObject gemImageGameUI;
-    [SerializeField] private GameObject gemImageEndUI;
-    [SerializeField] private Image gemSpawn;
-    [SerializeField] private TextMeshProUGUI endUIGemRewardText;
-    [SerializeField] private TextMeshProUGUI endUITotalGemText;
-    [SerializeField] private int rewardGem;
-    [SerializeField] private int totalGem;
-    [SerializeField] private Button continueButton;
-    [SerializeField] private Image tapMeterFillImage;
     [SerializeField] private GameObject rampUI;
-    [SerializeField] private TextMeshProUGUI tapPowerPercentage;
+    
+    [SerializeField] private TextMeshProUGUI gameUICurrentLevelText;
+    [SerializeField] private TextMeshProUGUI gameUINextLevelText;
+    [SerializeField] private TextMeshProUGUI gameUITotalGemText;
+    [SerializeField] private GameObject gameUIGemImage;
+    [SerializeField] private GameObject[] gameUIProgressImages;
+    [SerializeField] private int progressImageIndex;
+        
+    [SerializeField] private TextMeshProUGUI scorePopUp;
+    [SerializeField] private TextMeshProUGUI endUIGemRewardText;
+    [SerializeField] private GameObject endUIGemImage;
+    [SerializeField] private TextMeshProUGUI endUITotalGemText;
+    [SerializeField] private RectTransform endUIGemImageTarget;
+    [SerializeField] private Button continueButton;
+    
+    [SerializeField] private Image rampUIFillImage;
+    [SerializeField] private TextMeshProUGUI rampUIPowerPercentage;
+
+    [SerializeField] private int gemPopUpCount = 10;
+    [SerializeField] private Vector3 defaultGemImageScale;
 
     private void Start()
     {
-        ShowNextLevel();
-        totalGem = gameManager.gemCount;
-        gameUITotalGemText.text = totalGem.ToString();
+        UpdateLevelIndicators();
+        gameUITotalGemText.text = gameManager.gemCount.ToString();
     }
 
-    public void LevelStart()
+    public void SetProgressImage()
     {
-        startUI.SetActive(false);
-        gameUI.SetActive(true);
-        gameUITotalGemText.text = totalGem.ToString();
-    }
-
-    public void FillProgressImage()
-    {
-        progressImages[progressImageIndex].SetActive(true);
+        gameUIProgressImages[progressImageIndex].SetActive(true);
         progressImageIndex++;
     }
 
-    public void ShowNextLevel()
+    public void UpdateLevelIndicators()
     {
         int currentLevel = gameManager.level;
-        currentLevelText.text = currentLevel.ToString();
-        nextLevelText.text = (currentLevel + 1).ToString();
+        gameUICurrentLevelText.text = currentLevel.ToString();
+        gameUINextLevelText.text = (currentLevel + 1).ToString();
         ResetProgressImages();
     }
 
-    private void ShowScorePopUp(int score)
+    public IEnumerator ShowScorePopUp(int score)
     {
+        yield return new WaitForSeconds(1);
         scorePopUp.text = "+" + score;
-        scorePopUp.rectTransform.localPosition = new Vector3(Random.Range(-200, 200), Random.Range(-200, 200), 0);
+        scorePopUp.rectTransform.localPosition = GetRandomPosition(-200, 200, -200, 200);
         scorePopUp.gameObject.SetActive(true);
-        scorePopUp.transform.DOScale(1, 0.5f).OnComplete(() =>
+        Sequence scoreSequence = DOTween.Sequence();
+        scoreSequence.Append(scorePopUp.transform.DOScale(1, 0.5f));
+        scoreSequence.Append(scorePopUp.DOFade(0, 1));
+        scoreSequence.OnComplete(() =>
         {
-            scorePopUp.DOFade(0, 1).OnComplete(() =>
-            {
-                scorePopUp.gameObject.SetActive(false);
-                scorePopUp.alpha = 1;
-                scorePopUp.transform.localScale = Vector3.zero;
-            });
+            scorePopUp.gameObject.SetActive(false);
+            scorePopUp.alpha = 1;
+            scorePopUp.transform.localScale = Vector3.zero;
         });
     }
 
-    public IEnumerator ShowGemPopUps(int score)
+    public IEnumerator ShowGemPopUp()
     {
-        ShowScorePopUp(score);
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i < 10; i++)
+        yield return new WaitForSeconds(2);
+        float waitDuration = 0;
+        for (int i = 0; i < gemPopUpCount; i++)
         {
-            Sequence gemSequence = DOTween.Sequence();
-            Image gemPopUp = ObjectPool.SharedInstance.GetPooledObject(4).GetComponent<Image>();
+            GameObject gemPopUp = ObjectPool.SharedInstance.GetPooledImage();
             if (gemPopUp != null)
             {
-                gemPopUp.rectTransform.localPosition = new Vector3(Random.Range(-400, 400), Random.Range(-600, 600), 0);
-                gemPopUp.gameObject.SetActive(true);
-                gemSequence.Append(gemPopUp.transform.DOScale(new Vector3(1, 0.8f, 1), 0.2f));
-                gemSequence.Append(gemPopUp.transform.DOMove(gemImageGameUI.transform.position, 1f));
-                gemSequence.OnComplete(() =>
-                {
-                    gemPopUp.gameObject.SetActive(false);
-                    DOTween.Kill(gemPopUp.transform);
-                });
+                waitDuration = GemImagePopAnimation(gemPopUp);
             }
-            yield return new WaitForSeconds(0.04f);
         }
-        yield return new WaitForSeconds(1.2f);
-        gemImageGameUI.transform.DOPunchScale(new Vector3(0, 0.5f, 0), 0.5f, 2).OnComplete(() =>
-        {
-            totalGem += score;
-            gameUITotalGemText.text = totalGem.ToString();
-        });
+        yield return new WaitForSeconds(waitDuration);
+        gameUIGemImage.transform.DOPunchScale(new Vector3(0, 0.5f, 0), 0.5f, 2);
+        gameUITotalGemText.text = gameManager.gemCount.ToString();
     }
-
-    public void ShowEndUI(int gemReward, int gemTotal)
+    
+    private float GemImagePopAnimation(GameObject gemImage)
     {
-        rewardGem = gemReward;
-        totalGem = gemTotal;
-        endUIGemRewardText.text = rewardGem.ToString();
-        endUITotalGemText.text = totalGem.ToString();
-        gameUI.SetActive(false);
-        endUI.SetActive(true); 
+        Sequence gemSequence = DOTween.Sequence();
+        gemImage.transform.localPosition = GetRandomPosition(-400, 400, -600, 600);
+        gemImage.gameObject.SetActive(true);
+        gemSequence.Append(gemImage.transform.DOScale(defaultGemImageScale, 0.2f));
+        gemSequence.Append(gemImage.transform.DOMove(gameUIGemImage.transform.position, 1f));
+        gemSequence.OnComplete(() =>
+        {
+            gemImage.gameObject.SetActive(false);
+            DOTween.Kill(gemImage.transform);
+        });
+        return gemSequence.Duration();
     }
 
+    private float GemRotatingFadeAnimation(GameObject gemImage, int currentTotalGem)
+    {
+        Sequence gemSequence = DOTween.Sequence();
+        gemImage.transform.localPosition = endUIGemImage.transform.localPosition;
+        gemImage.gameObject.SetActive(true);
+        gemSequence.Append(gemImage.transform.DOMove(endUIGemImageTarget.position, 2f));
+        gemSequence.Insert(0, gemImage.transform.DOScale(Vector3.one / 5, gemSequence.Duration()));
+        gemSequence.Insert(0, gemImage.transform.DORotate(new Vector3(0, 0, 360), gemSequence.Duration(), RotateMode
+            .FastBeyond360));
+        gemSequence.OnComplete(() =>
+        {
+            endUITotalGemText.text = currentTotalGem.ToString();
+            endUIGemImage.transform.DOPunchScale(Vector3.one / 5, 0.1f, 2, 0.5f);
+            DOTween.Kill(gemImage.transform);
+            gemImage.gameObject.SetActive(false);
+        });
+        return gemSequence.Duration();
+    }
+    
     public void ContinueButton()
     {
-        StartCoroutine(ContinueButtonRoutine());
+        StartCoroutine(ContinueToStart());
     }
 
-    private IEnumerator ContinueButtonRoutine()
+    private IEnumerator ContinueToStart()
+    {
+        yield return StartCoroutine(CollectRewardedGems());
+        gameManager.ReadyPlayer();
+    }
+
+    private IEnumerator CollectRewardedGems()
     {
         continueButton.gameObject.SetActive(false);
-        int minimumStep = (int)rewardGem / 10;
-        for (int i = 0; i < 10; i++)
+        float waitDuration = 0;
+        int rewardedGems = int.Parse(endUIGemRewardText.text);
+        int currentTotalGems = int.Parse(endUITotalGemText.text);
+        int minimumStep = rewardedGems / gemPopUpCount;
+        for (int i = 0; i < gemPopUpCount; i++)
         {
-            Sequence gemSequence = DOTween.Sequence();
-            Image gemPopUp = ObjectPool.SharedInstance.GetPooledObject(4).GetComponent<Image>();
+            GameObject gemPopUp = ObjectPool.SharedInstance.GetPooledImage();
             if (gemPopUp != null)
             {
                 int randomStep = Random.Range(minimumStep, minimumStep + 5);
-                if (rewardGem < randomStep)
+                if (rewardedGems < randomStep)
                 {
-                    randomStep = rewardGem;
-                    rewardGem = 0;
+                    randomStep = rewardedGems;
                 }
-                else
-                {
-                    rewardGem -= randomStep;
-                }
-                endUIGemRewardText.text = rewardGem.ToString();
-                gemPopUp.transform.localScale = new Vector3(1, 0.8f, 1);
-                gemPopUp.rectTransform.position = gemSpawn.rectTransform.position;
-                gemPopUp.gameObject.SetActive(true);
-                gemSequence.Append(gemPopUp.transform.DOMove(gemImageEndUI.transform.position, 2f));
-                gemSequence.Insert(0, gemPopUp.transform.DOScale(Vector3.zero, gemSequence.Duration()));
-                gemSequence.Insert(0, gemPopUp.transform.DORotate(new Vector3(0, 0, 360), gemSequence.Duration(), RotateMode
-                    .FastBeyond360));
-                gemSequence.OnComplete(() =>
-                {
-                    totalGem += randomStep;
-                    endUITotalGemText.text = totalGem.ToString();
-                    gemImageEndUI.transform.DOPunchScale(Vector3.one / 5, 0.1f, 2, 0.5f);
-                    gemPopUp.gameObject.SetActive(false);
-                    DOTween.Kill(gemPopUp.transform);
-                });
+                rewardedGems -= randomStep;
+                endUIGemRewardText.text = rewardedGems.ToString();
+                currentTotalGems += randomStep;
+                waitDuration = GemRotatingFadeAnimation(gemPopUp, currentTotalGems);
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(waitDuration / gemPopUpCount);
         }
-        yield return new WaitForSeconds(2.5f);
-        gameUITotalGemText.text = totalGem.ToString();
-        endUI.SetActive(false);
-        continueButton.gameObject.SetActive(true);
-        startUI.SetActive(true);
-        gameManager.EnablePlayer();
-    }
-
-    public void ToggleRampUI()
-    {
-        rampUI.SetActive(!rampUI.activeSelf);
+        yield return new WaitForSeconds(waitDuration);
+        gameUITotalGemText.text = currentTotalGems.ToString();
+        ShowStartUI();
     }
 
     public void UpdateTapMeter(float power, float maxPower)
     {
         float level = power / maxPower;
-        tapMeterFillImage.fillAmount = level;
-        tapPowerPercentage.text = "%" + (int)power;
+        rampUIFillImage.fillAmount = level;
+        rampUIPowerPercentage.text = "%" + (int)power;
     }
 
     private void ResetProgressImages()
     {
-        for (int i = 0; i < progressImages.Length; i++)
+        for (int i = 0; i < gameUIProgressImages.Length; i++)
         {
-            progressImages[i].SetActive(false);
+            gameUIProgressImages[i].SetActive(false);
         }
         progressImageIndex = 0;
     }
@@ -197,5 +189,39 @@ public class UIManager : MonoBehaviour
     {
         gameUI.SetActive(false);
         failUI.SetActive(true);
+    }
+    
+    public void ShowGameUI()
+    {
+        startUI.SetActive(false);
+        gameUI.SetActive(true);
+        gameUITotalGemText.text = gameManager.gemCount.ToString();
+    }
+
+    public void ShowStartUI()
+    {
+        endUI.SetActive(false);
+        continueButton.gameObject.SetActive(true);
+        startUI.SetActive(true);
+    }
+    
+    public void ShowEndUI(int gemReward, int gemTotal)
+    {
+        endUIGemRewardText.text = gemReward.ToString();
+        endUITotalGemText.text = gemTotal.ToString();
+        gameUI.SetActive(false);
+        endUI.SetActive(true); 
+    }
+    
+    public void ToggleRampUI()
+    {
+        rampUI.SetActive(!rampUI.activeSelf);
+    }
+
+    private Vector3 GetRandomPosition(int xMin, int xMax, int yMin, int yMax)
+    {
+        int randomXPosition = Random.Range(xMin, xMax);
+        int randomYPosition = Random.Range(yMin, yMax);
+        return new Vector3(randomXPosition, randomYPosition, 0);
     }
 }

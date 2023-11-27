@@ -4,23 +4,32 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     public static ObjectPool SharedInstance;
+    private List<List<GameObject>> pooledObstacleLists;
+    
     public List<GameObject> pooledSpheres;
     public List<GameObject> pooledCubes;
     public List<GameObject> pooledCapsules;
     public List<GameObject> pooledPyramids;
-    public List<GameObject> gemImages;
+    public List<GameObject> pooledGemImages;
+    public List<GameObject> pooledParticles;
+    
     public GameObject spherePrefab;
     public GameObject cubePrefab;
     public GameObject capsulePrefab;
     public GameObject pyramidPrefab;
+    public GameObject gemImagePrefab;
+    public GameObject particlePrefab;
+    
     public GameObject spherePoolContainer;
     public GameObject cubePoolContainer;
     public GameObject capsulePoolContainer;
     public GameObject pyramidPoolContainer;
-    public int amount;
-    public GameObject gemImagePrefab;
-    public int gemImageCount;
     public GameObject gemImageContainer;
+    public GameObject particleContainer;
+    
+    public int obstacleAmount;
+    public int gemImageAmount;
+    public int particleAmount;
 
     private void Awake()
     {
@@ -33,87 +42,72 @@ public class ObjectPool : MonoBehaviour
         pooledCapsules = new List<GameObject>();
         pooledCubes = new List<GameObject>();
         pooledPyramids = new List<GameObject>();
-        gemImages = new List<GameObject>();
-        for (int i = 0; i < amount; i++)
+        pooledGemImages = new List<GameObject>();
+        pooledParticles = new List<GameObject>();
+        pooledObstacleLists = new List<List<GameObject>>()
+        {
+            pooledSpheres, pooledCubes, pooledCapsules, pooledPyramids,
+        };
+        
+        for (int i = 0; i < obstacleAmount; i++)
         {
             FillPool(spherePrefab, pooledSpheres, spherePoolContainer);
             FillPool(cubePrefab, pooledCubes, cubePoolContainer);
             FillPool(capsulePrefab, pooledCapsules, capsulePoolContainer);
             FillPool(pyramidPrefab, pooledPyramids, pyramidPoolContainer);
         }
-
-        for (int i = 0; i < gemImageCount; i++)
+        
+        for (int i = 0; i < gemImageAmount; i++)
         {
-            FillPool(gemImagePrefab, gemImages, gemImageContainer);
+            FillPool(gemImagePrefab, pooledGemImages, gemImageContainer);
+        }
+
+        for (int i = 0; i < particleAmount; i++)
+        {
+            FillPool(particlePrefab, pooledParticles, particleContainer);
         }
     }
 
-    public void FillPool(GameObject prefab, List<GameObject> pool, GameObject container)
+    private void FillPool(GameObject prefab, List<GameObject> pool, GameObject container)
     {
         GameObject tmp = Instantiate(prefab, container.transform);
         tmp.SetActive(false);
         pool.Add(tmp);
     }
 
-    public GameObject GetPooledObject(int index)
+    public GameObject GetPooledObstacle(int index)
     {
-        List<GameObject> selectedList = null;
-        int currentAmount = 0;
-        switch (index)
+        for (int i = 0; i < obstacleAmount; i++)
         {
-            case 0:
-                selectedList = pooledSpheres;
-                currentAmount = amount;
-                break;
-            case 1:
-                selectedList = pooledCubes;
-                currentAmount = amount;
-                break;
-            case 2:
-                selectedList = pooledCapsules;
-                currentAmount = amount;
-                break;
-            case 3:
-                selectedList = pooledPyramids;
-                currentAmount = amount;
-                break;
-            case 4:
-                selectedList = gemImages;
-                currentAmount = gemImageCount;
-                break;
-        }
-
-        for (int i = 0; i < currentAmount; i++)
-        {
-            if (!selectedList[i].activeInHierarchy)
+            if (!pooledObstacleLists[index][i].activeInHierarchy)
             {
-                return selectedList[i];
+                return pooledObstacleLists[index][i];
             }
         }
         return null;
     }
-
-    // This needs refactoring later
-    public void DeactivatePooledObjects()
+    
+    public GameObject GetPooledImage()
     {
-        for (int i = 0; i < amount; i++)
+        for (int i = 0; i < gemImageAmount; i++)
         {
-            if (pooledSpheres[i].activeInHierarchy)
+            if (!pooledGemImages[i].activeInHierarchy)
             {
-                pooledSpheres[i].SetActive(false);
-            }
-            if (pooledCubes[i].activeInHierarchy)
-            {
-                pooledCubes[i].SetActive(false);
-            }
-            if (pooledCapsules[i].activeInHierarchy)
-            {
-                pooledCapsules[i].SetActive(false);
-            }
-            if (pooledPyramids[i].activeInHierarchy)
-            {
-                pooledPyramids[i].SetActive(false);
+                return pooledGemImages[i];
             }
         }
+        return null;
+    }
+    
+    public GameObject GetPooledParticle()
+    {
+        for (int i = 0; i < particleAmount; i++)
+        {
+            if (!pooledParticles[i].activeInHierarchy)
+            {
+                return pooledParticles[i];
+            }
+        }
+        return null;
     }
 }

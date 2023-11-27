@@ -4,25 +4,21 @@ public class ExplodingObstacles : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private int shapeIndex;
-    [SerializeField] private Mesh[] meshes;
     [SerializeField] private int amount;
     [SerializeField] private bool isDrop;
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private ObstacleBasket obstacleBasket;
+    [SerializeField] private Collider cd;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        obstacleBasket = GameObject.Find("ObstacleBasketThird").GetComponent<ObstacleBasket>();
         if (CompareTag("Drop"))
         {
-            shapeIndex = Random.Range(0, 4);
             isDrop = true;
         }
-        else
-        {
-            shapeIndex = 0;
-        }
-        GetComponent<MeshFilter>().mesh = meshes[shapeIndex];
-        amount = Random.Range(5, 9);
+        amount = 10;
     }
 
     private void Update()
@@ -41,6 +37,13 @@ public class ExplodingObstacles : MonoBehaviour
             else
             {
                 transform.Translate(Vector3.back * (10 * Time.deltaTime));
+                if (transform.position.z - player.transform.position.z < 10)
+                {
+                    Debug.Log("Called");
+                    Explode();
+                    cd.isTrigger = true;
+                    Destroy(gameObject);
+                }
             }
         }
     }
@@ -49,12 +52,9 @@ public class ExplodingObstacles : MonoBehaviour
     {
         if (isDrop)
         {
+            Debug.Log("Called");
             Explode();
-            Destroy(gameObject);
-        }
-        else if (other.gameObject.CompareTag("Player"))
-        {
-            Explode();
+            cd.isTrigger = true;
             Destroy(gameObject);
         }
     }
@@ -63,16 +63,16 @@ public class ExplodingObstacles : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObject(shapeIndex);
+            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObstacle(shapeIndex);
+            
             if (obstacle != null)
             {
                 Vector3 currentPosition = transform.position;
                 obstacle.transform.position = new Vector3(currentPosition.x + Random.Range(-1f, 1f), 
                     currentPosition.y, currentPosition.z + Random.Range(-1f, 1f));
                 obstacle.SetActive(true);
-                /*Rigidbody rb = obstacle.GetComponent<Rigidbody>();
-                rb.AddForce(new Vector3(Random.Range(-0.5f, 0.5f), 1f, Random.Range(-0.5f, 0.5f)),
-                    ForceMode.Impulse);*/
+                obstacleBasket.pooledObjects.Add(obstacle);
+                
             }
         }
     }
