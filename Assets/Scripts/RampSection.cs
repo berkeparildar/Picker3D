@@ -12,7 +12,7 @@ public class RampSection : MonoBehaviour
     [SerializeField] private MeshCollider meshCollider;
     [SerializeField] private Vector3 resetPosition;
 
-    // This section of variables are used in ramp, where player is repeatedly tapping.
+    // This section of variables are used where player is repeatedly tapping.
     [SerializeField] private float powerDecreaseRate;
     [SerializeField] private float minPowerIncrease;
     [SerializeField] private float maxPowerIncrease;
@@ -22,6 +22,7 @@ public class RampSection : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private bool isOnRamp;
 
+    // Transition to ramp movement here
     private void OnEnable()
     {
         isOnRamp = true;
@@ -66,7 +67,6 @@ public class RampSection : MonoBehaviour
                 currentPower += Random.Range(minPowerIncrease, maxPowerIncrease);
             }
         }
-
         currentPower = Mathf.Clamp(currentPower, 0, maxPower);
         uiManager.UpdateTapMeter(currentPower, maxPower);
     }

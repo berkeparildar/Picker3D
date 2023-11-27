@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "EndWall":
+            case "EndWall": // Before the obstacle basket
                 verticalSpeed = 0;
                 DeactivateFlaps();
                 break;
@@ -54,12 +54,23 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+    
+    // Just for audio
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("SmallObstacle") ||other.gameObject.CompareTag("PooledObstacle"))
+        {
+            other.transform.GetComponent<AudioSource>().PlayOneShot(other.gameObject.GetComponent<AudioSource>().clip);
+            other.transform.GetComponent<AudioSource>().volume -= 0.02f;
+        }
+    }
 
     private void Update()
     {
         HorizontalMovement();
     }
 
+    // Where touch input it got
     private void HorizontalMovement()
     {
         xDelta = 0;
@@ -70,7 +81,7 @@ public class Player : MonoBehaviour
             {
                 if (!firstTouch)
                 {
-                    firstTouch = true;
+                    firstTouch = true; // this boolean controls the first tap to play
                     uiManager.ShowGameUI();
                     return;
                 }
@@ -104,6 +115,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Called by obstacle basket if target amount is pushed
     public void ContinueMoving()
     {
         verticalSpeed = 1;
@@ -143,6 +155,7 @@ public class Player : MonoBehaviour
         });
     }
 
+    // Called if a level is failed
     public void ResetPlayer()
     {
         firstTouch = false;

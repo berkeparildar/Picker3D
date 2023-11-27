@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class LandingZone : MonoBehaviour
 {
+    // This is the script for handling operations related to Landing Zone
+    // Landing zone is the long platform at the end of the level, where player will land to after 
+    // launching off the ramp.
+    
     [SerializeField] private GameManager gameManager;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private GameObject tileParent;
     [SerializeField] private GameObject player;
-    [SerializeField] private Vector3 normalTileScale;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,6 +27,8 @@ public class LandingZone : MonoBehaviour
 
     private void CalculateAndGiveLandedAmount()
     {
+        // I calculate the landed amount by checking the distance of each individual tile to player
+        // However this is not ideal, because the player's anchor is not at its center.
         float minDistance = 320;
         GameObject tempTile = null;
         for (int i = 0; i < tileParent.transform.childCount; i++)
@@ -37,12 +42,14 @@ public class LandingZone : MonoBehaviour
         }
         if (tempTile != null)
         {
+            // The amount are stored in the tiles' names
             int landedAmount = int.Parse(tempTile.name);
             cameraManager.SetCameraLookAt(isFalling: false);
             StartCoroutine(gameManager.GetLandingZoneGemReward(landedAmount));
         }
     }
 
+    // Method for stopping the player so that it does not slide to eternity
     private void StopPlayer()
     {
         Rigidbody playerBody = player.GetComponent<Rigidbody>();
@@ -50,6 +57,7 @@ public class LandingZone : MonoBehaviour
         playerBody.angularVelocity = Vector3.zero;
     }
 
+    // Shrinks the tiles after landing. Resets after tiles are no longer in camera's frame
     private IEnumerator AnimateTiles()
     {
         yield return new WaitForSeconds(1);

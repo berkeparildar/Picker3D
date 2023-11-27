@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class HelicopterSpawner : MonoBehaviour
 {
+    // this is the script for the "helicopter" looking spawner that appears on the third platform
     [SerializeField] private GameObject fan;
     [SerializeField] private bool spawnInitialize;
     [SerializeField] private GameObject player;
-    [SerializeField] private int listIndex;
+    [SerializeField] private int shapeIndex;
     [SerializeField] private ObstacleBasket obstacleBasket;
 
     private void Start()
@@ -15,7 +16,7 @@ public class HelicopterSpawner : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         obstacleBasket = GameObject.Find("ObstacleBasketThird").GetComponent<ObstacleBasket>();
         fan.transform.DORotate(new Vector3(0, 180, 0), 1).SetLoops(-1, LoopType.Incremental).SetEase(Ease.Linear);
-        listIndex = Random.Range(0, 4);
+        shapeIndex = Random.Range(0, 4); //Gets the obstalce it will spawn randomly from pools
     }
 
     void Update()
@@ -34,7 +35,7 @@ public class HelicopterSpawner : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
-        int movementChoice = Random.Range(0, 2);
+        int movementChoice = Random.Range(0, 2); // Randomly choose movement
         if (movementChoice == 0)
         {
             LinearMovement();
@@ -45,7 +46,7 @@ public class HelicopterSpawner : MonoBehaviour
         }
         while (transform.position.z < 380)
         {
-            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObstacle(listIndex); 
+            GameObject obstacle = ObjectPool.SharedInstance.GetPooledObstacle(shapeIndex); 
             if (obstacle != null) {
                 obstacle.transform.position = transform.position;
                 obstacle.SetActive(true);
@@ -57,6 +58,7 @@ public class HelicopterSpawner : MonoBehaviour
         Deactivate();
     }
 
+    // Tween sequence that makes heli to move like a sine graph
     private void SineMovement()
     {
         Sequence seqMovement = DOTween.Sequence();
@@ -68,6 +70,7 @@ public class HelicopterSpawner : MonoBehaviour
         seqMovement.Append(transform.DOMoveY(100, 2));
     }
 
+    // Tween sequence that makes heli to move straight
     private void LinearMovement()
     {
         Sequence seqMovement = DOTween.Sequence();

@@ -8,14 +8,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int platformCount;
     [SerializeField] public int level;
     [SerializeField] private int uniqueLevels;
-    [SerializeField] private int obstacleIndex;
+    [SerializeField] private int obstacleIndex; // this variable sets the current obstacle in level for PlayerPrefs
     [SerializeField] private Player player;
     [SerializeField] private UIManager uiManager;
-
+    
     [SerializeField] private Material groundMaterial;
     [SerializeField] private Material rampMaterial;
     [SerializeField] private Color[] levelColors;
-
+    
     [SerializeField] private GameObject[] firstPlatformObstacles;
     [SerializeField] private GameObject[] secondPlatformObstacles;
     [SerializeField] private GameObject[] thirdPlatformObstacles;
@@ -37,12 +37,13 @@ public class GameManager : MonoBehaviour
         gemCount = PlayerPrefs.GetInt("GemCount", 0);
         level = PlayerPrefs.GetInt("Level", 1);
         obstacleIndex = PlayerPrefs.GetInt("ObstacleIndex", 0);
+        ChangeLevelColors();
         GenerateNewLevel();
     }
 
     public void LoadNextLevel()
     {
-        //ChangeLevelColors();
+        ChangeLevelColors();
         GenerateNewLevel();
         LoadFlapActivators();
         ResetBaskets();
@@ -50,8 +51,8 @@ public class GameManager : MonoBehaviour
 
     private void ChangeLevelColors()
     {
-        groundMaterial.color = rampMaterial.color;
-        rampMaterial.color = levelColors[level + 1];
+        groundMaterial.color = levelColors[obstacleIndex];
+        rampMaterial.color = obstacleIndex > 6 ? levelColors[obstacleIndex] : levelColors[obstacleIndex + 1];
     }
 
     private void MovePlayerToStartPosition()
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
         uiManager.ShowStartUI();
     }
 
+    // Called after successfully completing a level
     private void GetEndLevelGemReward()
     {
         int randomGemAward = Random.Range(minGemReward, maxGemReward);
@@ -72,6 +74,7 @@ public class GameManager : MonoBehaviour
         gemCount += randomGemAward;
     }
 
+    // Called after landing on gem tiles before the end of the level
     public IEnumerator GetLandingZoneGemReward(int landedRewardTile)
     {
         IncreaseGemCount(landedRewardTile);
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
         MovePlayerToStartPosition();
     }
 
-    public void IncreaseGemCount(int amount)
+    private void IncreaseGemCount(int amount)
     {
         gemCount += amount;
         PlayerPrefs.SetInt("GemCount", gemCount);
@@ -94,6 +97,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Resets all the obstacle baskets to their default state
     private void ResetBaskets()
     {
         foreach (var basket in obstacleBaskets)
@@ -102,6 +106,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // This method spawns two flap activators on one position chosen randomly out of three
     private void LoadFlapActivators()
     {
         for (int i = 0; i < flapActivators.transform.childCount; i++)
@@ -162,13 +167,13 @@ public class GameManager : MonoBehaviour
     private void GenerateObstacle(int platformIndex)
     {
         GameObject obstacle = null;
-        if (level <= uniqueLevels)
+        if (level <= uniqueLevels) // Out of unique levels
         {
             obstacle = obstaclePrefabsLists[platformIndex][obstacleIndex];
         }
         else
         {
-            obstacleIndex = Random.Range(0, uniqueLevels);
+            obstacleIndex = Random.Range(0, uniqueLevels); // Get random level
             obstacle = obstaclePrefabsLists[platformIndex][obstacleIndex];
             PlayerPrefs.SetInt("ObstacleIndex", obstacleIndex);
         }
@@ -179,12 +184,14 @@ public class GameManager : MonoBehaviour
             obstacleContainers[platformIndex].transform);
     }
 
+    // Called after failing a level. 
     private void GenerateMissingObstacle()
     {
         for (int i = 0; i < platformCount; i++)
         {
             if (obstacleContainers[i].transform.childCount != 0)
             {
+                // Not destroying causes many issues so I prefer to destroy if it exists
                 Destroy(obstacleContainers[i].transform.GetChild(0).gameObject);
             }
             GenerateObstacle(i);

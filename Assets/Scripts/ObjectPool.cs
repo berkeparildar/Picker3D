@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour
 {
+    // This is the object pool script that is used for smaller objects that are used on the third platform, 
+    // gem images that pop up for UI and particles that "jump" after obstacles are destroyed in obstacle basket
+    
+    // For platform one and two, I decided to not use object pooling, because of them having so many obstacles 
+    // that you need to track and reset the state of, I thought that it was not worth it
+    
     public static ObjectPool SharedInstance;
     private List<List<GameObject>> pooledObstacleLists;
     

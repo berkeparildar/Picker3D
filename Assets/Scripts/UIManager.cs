@@ -8,20 +8,20 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameManager gameManager;
     
-    [SerializeField] private GameObject startUI;
-    [SerializeField] private GameObject endUI;
+    [SerializeField] private GameObject startUI; // screen that shows up at the beginning of every level, goes with first tap
+    [SerializeField] private GameObject endUI; // screen that shows after successfully completing a level
     [SerializeField] private GameObject gameUI;
-    [SerializeField] private GameObject failUI;
-    [SerializeField] private GameObject rampUI;
+    [SerializeField] private GameObject failUI; // screen that shows after failing a level
+    [SerializeField] private GameObject rampUI; // tap meter and tap text
     
     [SerializeField] private TextMeshProUGUI gameUICurrentLevelText;
     [SerializeField] private TextMeshProUGUI gameUINextLevelText;
     [SerializeField] private TextMeshProUGUI gameUITotalGemText;
     [SerializeField] private GameObject gameUIGemImage;
-    [SerializeField] private GameObject[] gameUIProgressImages;
+    [SerializeField] private GameObject[] gameUIProgressImages; // these are the images between the levels at top
     [SerializeField] private int progressImageIndex;
         
-    [SerializeField] private TextMeshProUGUI scorePopUp;
+    [SerializeField] private TextMeshProUGUI scorePopUp; // shows after landing on the landing zone
     [SerializeField] private TextMeshProUGUI endUIGemRewardText;
     [SerializeField] private GameObject endUIGemImage;
     [SerializeField] private TextMeshProUGUI endUITotalGemText;
@@ -32,7 +32,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rampUIPowerPercentage;
 
     [SerializeField] private int gemPopUpCount = 10;
-    [SerializeField] private Vector3 defaultGemImageScale;
+    // for some reason gem images I use look funny with their normal scale so I needed to add this
+    [SerializeField] private Vector3 defaultGemImageScale; 
 
     private void Start()
     {
@@ -46,6 +47,7 @@ public class UIManager : MonoBehaviour
         progressImageIndex++;
     }
 
+    // Updates the level texts and progress images. Called after a new level
     public void UpdateLevelIndicators()
     {
         int currentLevel = gameManager.level;
@@ -54,6 +56,7 @@ public class UIManager : MonoBehaviour
         ResetProgressImages();
     }
 
+    // Shows the landed tile's score on screen at a random position, then fades away
     public IEnumerator ShowScorePopUp(int score)
     {
         yield return new WaitForSeconds(1);
@@ -71,6 +74,7 @@ public class UIManager : MonoBehaviour
         });
     }
 
+    // Called slightly after the score pop up. Gems appear at random positions and move towards the upper left corner
     public IEnumerator ShowGemPopUp()
     {
         yield return new WaitForSeconds(2);
@@ -88,6 +92,7 @@ public class UIManager : MonoBehaviour
         gameUITotalGemText.text = gameManager.gemCount.ToString();
     }
     
+    // Tween sequence that scales and moves an image. Called for gem images that appear after landing
     private float GemImagePopAnimation(GameObject gemImage)
     {
         Sequence gemSequence = DOTween.Sequence();
@@ -103,6 +108,8 @@ public class UIManager : MonoBehaviour
         return gemSequence.Duration();
     }
 
+    // Tween sequence that rotates, shrinks and moves gem images.
+    // This is called at the end UI, after player hits continue button
     private float GemRotatingFadeAnimation(GameObject gemImage, int currentTotalGem)
     {
         Sequence gemSequence = DOTween.Sequence();
@@ -218,6 +225,8 @@ public class UIManager : MonoBehaviour
         rampUI.SetActive(!rampUI.activeSelf);
     }
 
+    // Method that returns a random vector3 in the given bounds. Called when placing
+    // pop up gem images randomly at the end of the level
     private Vector3 GetRandomPosition(int xMin, int xMax, int yMin, int yMax)
     {
         int randomXPosition = Random.Range(xMin, xMax);

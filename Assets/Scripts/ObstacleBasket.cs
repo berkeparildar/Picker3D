@@ -16,6 +16,9 @@ public class ObstacleBasket : MonoBehaviour
 
     [SerializeField] private TextMeshPro countText;
     [SerializeField] private Player player;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip winSound;
+    [SerializeField] private AudioClip loseSound;
 
     [SerializeField] private GameObject leftGate;
     [SerializeField] private GameObject rightGate;
@@ -65,11 +68,15 @@ public class ObstacleBasket : MonoBehaviour
             if (currentCount >= targetCount)
             {
                 RaiseGatesAndPlatform();
+                audioSource.clip = winSound;
+                audioSource.Play();
                 uiManager.SetProgressImage();
             }
             // fail
             else
             {
+                audioSource.clip = loseSound;
+                audioSource.Play();
                 uiManager.ShowFailUI();
             }
 

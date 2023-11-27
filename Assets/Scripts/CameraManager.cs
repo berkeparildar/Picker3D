@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private GameObject defaultCameraPoint;
     [SerializeField] private GameObject fallCameraPoint;
 
+    // Called when player enters and leaves the ramp
     public void ToggleRampCamera()
     {
         rampCamera.SetActive(!rampCamera.activeSelf);
@@ -17,7 +18,8 @@ public class CameraManager : MonoBehaviour
     {
         if (isFalling)
         {
-            defaultCamera.m_LookAt = fallCameraPoint.transform;
+            defaultCamera.m_LookAt =
+                fallCameraPoint.transform; // The look target is changed when player is falling of the ramp
         }
         else
         {
