@@ -57,7 +57,10 @@ public class GameManager : MonoBehaviour
 
     private void MovePlayerToStartPosition()
     {
-        player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(GetEndLevelGemReward);
+        player.transform.DOMove(new Vector3(0, 0.6f, 0), 2).OnComplete(() => {
+            GetEndLevelGemReward();
+            Physics.SyncTransforms();
+        });
     }
 
     public void ReadyPlayer()
@@ -162,6 +165,7 @@ public class GameManager : MonoBehaviour
         player.ResetPlayer();
         GenerateMissingObstacle();
         uiManager.RestartLevel();
+        Physics.SyncTransforms();
     }
 
     private void GenerateObstacle(int platformIndex)

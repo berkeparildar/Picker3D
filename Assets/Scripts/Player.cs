@@ -161,5 +161,6 @@ public class Player : MonoBehaviour
         firstTouch = false;
         verticalSpeed = 1;
         transform.position = new Vector3(0, 0.6f, 0);
+        Physics.SyncTransforms();
     }
 }
