@@ -1,4 +1,4 @@
-[![Badge 1](media/pf.png)](https://berkeparildar.github.io/)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+[![Badge 1](media/pf.png)](https://berkeparildar.github.io/games)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![Badge 2](media/ty.png)](https://youtu.be/vESaYdveps0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [![Badge 3](media/gp.png)](https://play.google.com/store/apps/details?id=com.bprldr.Picker3D)
 # Picker3D
