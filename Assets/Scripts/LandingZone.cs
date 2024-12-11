@@ -53,7 +53,7 @@ public class LandingZone : MonoBehaviour
     private void StopPlayer()
     {
         Rigidbody playerBody = player.GetComponent<Rigidbody>();
-        playerBody.velocity = Vector3.zero;
+        playerBody.linearVelocity = Vector3.zero;
         playerBody.angularVelocity = Vector3.zero;
     }
 

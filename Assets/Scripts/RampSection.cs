@@ -52,8 +52,8 @@ public class RampSection : MonoBehaviour
     private void PlayerMovement()
     {
         Vector3 movement = transform.forward * speed + new Vector3(0, 0, currentPower / 2.5f);
-        movement.y = rb.velocity.y;
-        rb.velocity = movement;
+        movement.y = rb.linearVelocity.y;
+        rb.linearVelocity = movement;
     }
     
     private void TapPowerUp()
